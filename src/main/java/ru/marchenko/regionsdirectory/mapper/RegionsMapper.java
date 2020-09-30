@@ -1,7 +1,6 @@
 package ru.marchenko.regionsdirectory.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import ru.marchenko.regionsdirectory.model.Region;
 
 import java.util.List;
@@ -14,4 +13,22 @@ public interface RegionsMapper {
 
     @Select("select * from regions")
     List<Region> findAll();
+
+    @Select("select * from regions where id = #{id}")
+    Region findById(long id);
+
+    @Delete("delete from regions")
+    int deleteAll();
+
+    @Delete("delete from regions where id = #{id}")
+    int deleteById(long id);
+
+    @Insert("insert into regions(name, abbreviated_name) " +
+            " values (#{name}, #{abbreviatedName})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    int insert(Region region);
+
+    @Update("update regions set name=#{name}, " +
+            " abbreviated_name=#{abbreviatedName} where id=#{id}")
+    int update(Region region);
 }
