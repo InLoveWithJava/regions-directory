@@ -22,6 +22,8 @@ class RegionsServiceTest {
 
     private final static String REGION_UPDATED_NAME = "upd region";
 
+    private final Region region = new Region(REGION_NAME, REGION_ABBREVIATED_NAME);
+
     @Autowired
     private RegionsService regionsService;
 
@@ -32,8 +34,6 @@ class RegionsServiceTest {
 
     @Test
     public void testInsertMethod() {
-        Region region = new Region(REGION_NAME, REGION_ABBREVIATED_NAME);
-
         Assert.assertEquals(1,  regionsService.insert(region));
         Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(region.getId()).getAbbreviatedName());
         Assert.assertEquals(REGION_NAME, regionsService.findById(region.getId()).getName());
@@ -41,8 +41,6 @@ class RegionsServiceTest {
 
     @Test
     public void testFindMethods() {
-        Region region = new Region(REGION_NAME, REGION_ABBREVIATED_NAME);
-
         regionsService.insert(region);
 
         Assert.assertNotNull(regionsService.findById(region.getId()));
@@ -53,8 +51,6 @@ class RegionsServiceTest {
 
     @Test
     public void testUpdateMethod() {
-        Region region = new Region(REGION_NAME, REGION_ABBREVIATED_NAME);
-
         regionsService.insert(region);
 
         Long id = region.getId();
@@ -70,8 +66,6 @@ class RegionsServiceTest {
 
     @Test
     public void testDeleteMethods() {
-        Region region = new Region(REGION_NAME, REGION_ABBREVIATED_NAME);
-
         regionsService.insert(region);
         System.out.println(regionsService.findAll());
         Assert.assertTrue(regionsService.findAll().contains(region));
@@ -80,6 +74,5 @@ class RegionsServiceTest {
 
         Assert.assertFalse(regionsService.findAll().contains(region));
     }
-
 
 }
