@@ -17,16 +17,13 @@ public interface RegionsMapper {
     @Select("select * from regions where id = #{id}")
     Region findById(long id);
 
-    @Delete("delete from regions")
-    int deleteAll();
-
     @Delete("delete from regions where id = #{id}")
-    int deleteById(long id);
+    void deleteById(long id);
 
     @Insert("insert into regions(name, abbreviated_name) " +
             " values (#{name}, #{abbreviatedName})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    int insert(Region region);
+    void insert(Region region);
 
     @Update("update regions set name=#{name}, " +
             " abbreviated_name=#{abbreviatedName} where id=#{id}")

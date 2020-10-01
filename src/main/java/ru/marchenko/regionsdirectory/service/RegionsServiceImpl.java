@@ -27,22 +27,25 @@ public class RegionsServiceImpl implements RegionsService {
     }
 
     @Override
-    public int deleteById(long id) {
-        return regionsMapper.deleteById(id);
+    public Region deleteById(long id) {
+        Region region = regionsMapper.findById(id);
+
+        regionsMapper.deleteById(id);
+
+        return region;
     }
 
     @Override
-    public int insert(Region region) {
-        return regionsMapper.insert(region);
+    public Region insert(Region region) {
+        regionsMapper.insert(region);
+
+        return region;
     }
 
     @Override
-    public int update(Region region) {
-        return regionsMapper.update(region);
+    public boolean update(Region region) {
+
+        return regionsMapper.update(region) > 0;
     }
 
-    @Override
-    public int deleteAll() {
-        return regionsMapper.deleteAll();
-    }
 }
