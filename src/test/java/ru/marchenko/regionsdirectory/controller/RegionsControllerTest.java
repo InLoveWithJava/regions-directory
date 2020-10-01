@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(RegionsController.class)
 class RegionsControllerTest {
+
     @Autowired
     private MockMvc mvc;
 
@@ -165,4 +166,5 @@ class RegionsControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotModified());
     }
+
 }

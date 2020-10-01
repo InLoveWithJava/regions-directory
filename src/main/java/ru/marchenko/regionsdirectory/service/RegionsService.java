@@ -8,6 +8,7 @@ import java.util.List;
  * @author Created by Vladislav Marchenko on 30.09.2020
  */
 public interface RegionsService {
+
     List<Region> findAll();
 
     Region findById(long id);
@@ -17,4 +18,5 @@ public interface RegionsService {
     Region insert(Region region);
 
     boolean update(Region region);
+
 }

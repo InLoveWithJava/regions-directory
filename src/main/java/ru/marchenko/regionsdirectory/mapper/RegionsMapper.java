@@ -28,4 +28,5 @@ public interface RegionsMapper {
     @Update("update regions set name=#{name}, " +
             " abbreviated_name=#{abbreviatedName} where id=#{id}")
     int update(Region region);
+
 }

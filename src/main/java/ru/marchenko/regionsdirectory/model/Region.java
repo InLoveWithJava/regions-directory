@@ -13,6 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Region implements Serializable {
+
     private Long id = 0L;
 
     private String name;
@@ -23,4 +24,5 @@ public class Region implements Serializable {
         this.name = name;
         this.abbreviatedName = abbreviatedName;
     }
+
 }
