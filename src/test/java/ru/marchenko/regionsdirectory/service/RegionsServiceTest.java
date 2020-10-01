@@ -29,12 +29,15 @@ class RegionsServiceTest {
 
     @AfterEach
     void cleanUp() {
-        regionsService.deleteAll();
+        regionsService
+                .findAll()
+                .forEach(it -> regionsService.deleteById(it.getId()));
     }
 
     @Test
     public void testInsertMethod() {
-        Assert.assertEquals(1,  regionsService.insert(region));
+        regionsService.insert(region);
+        Assert.assertNotEquals((Long) 0L,  region.getId());
         Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(region.getId()).getAbbreviatedName());
         Assert.assertEquals(REGION_NAME, regionsService.findById(region.getId()).getName());
     }
@@ -57,8 +60,7 @@ class RegionsServiceTest {
 
         region.setName(REGION_UPDATED_NAME);
 
-        regionsService.update(region);
-
+        Assert.assertTrue(regionsService.update(region));
         Assert.assertEquals(id, region.getId());
         Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(region.getId()).getAbbreviatedName());
         Assert.assertNotEquals(REGION_NAME, regionsService.findById(region.getId()).getName());

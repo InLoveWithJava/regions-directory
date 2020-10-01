@@ -12,11 +12,9 @@ public interface RegionsService {
 
     Region findById(long id);
 
-    int deleteById(long id);
+    Region deleteById(long id);
 
-    int insert(Region region);
+    Region insert(Region region);
 
-    int update(Region region);
-
-    int deleteAll();
+    boolean update(Region region);
 }

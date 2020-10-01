@@ -18,22 +18,46 @@ import java.util.List;
 public class RegionsController {
     private final RegionsService regionsService;
 
-    @GetMapping("/all")
+    @GetMapping(value = "/all")
     public ResponseEntity<List<Region>> getAll() {
         List<Region> regions = regionsService.findAll();
+
         return regions != null &&  !regions.isEmpty()
                 ? new ResponseEntity<>(regions, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/save")
+    @GetMapping(value = "{id}")
+    public ResponseEntity<Region> getById(@PathVariable Long id) {
+        Region region = regionsService.findById(id);
+
+        return region != null
+                ? new ResponseEntity<>(region, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping(value = "/save")
     public ResponseEntity<Region> save(@RequestBody Region region) {
-        regionsService.insert(region);
+        region = regionsService.insert(region);
 
-        Long id = region.getId();
-
-        return id.compareTo(0L) > 0
+        return region != null && (region.getId().compareTo(0L) > 0 && regionsService.findById(region.getId()) != null)
                 ? new ResponseEntity<>(region, HttpStatus.CREATED)
                 : new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<Region> deleteById(@PathVariable Long id) {
+        Region region = regionsService.deleteById(id);
+
+        return region != null
+                ? new ResponseEntity<>(region, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping(value = "/update")
+    public ResponseEntity<Region> update(@RequestBody Region region) {
+        return regionsService.update(region)
+                ? new ResponseEntity<>(region, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 }
