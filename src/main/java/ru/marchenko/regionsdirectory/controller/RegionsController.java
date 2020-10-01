@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.marchenko.regionsdirectory.model.Region;
 import ru.marchenko.regionsdirectory.service.RegionsService;
+import ru.marchenko.regionsdirectory.util.SortSetting;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class RegionsController {
 
     private final RegionsService regionsService;
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "get/all")
     public ResponseEntity<List<Region>> getAll() {
         List<Region> regions = regionsService.findAll();
 
@@ -28,7 +29,7 @@ public class RegionsController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "get/{id}")
     public ResponseEntity<Region> getById(@PathVariable Long id) {
         Region region = regionsService.findById(id);
 
@@ -48,7 +49,16 @@ public class RegionsController {
                     : new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @DeleteMapping(value = "{id}")
+    @PostMapping(value = "get/sort")
+    public ResponseEntity<List<Region>> getAllInSortedOrder(@RequestBody SortSetting sortSetting) {
+        List<Region> regions = regionsService.findAllInSortedOrder(sortSetting);
+
+        return regions != null &&  !regions.isEmpty()
+                ? new ResponseEntity<>(regions, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping(value = "delete/{id}")
     public ResponseEntity<Region> deleteById(@PathVariable Long id) {
         Region region = regionsService.deleteById(id);
 

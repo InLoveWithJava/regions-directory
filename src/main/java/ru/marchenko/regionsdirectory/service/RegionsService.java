@@ -1,6 +1,7 @@
 package ru.marchenko.regionsdirectory.service;
 
 import ru.marchenko.regionsdirectory.model.Region;
+import ru.marchenko.regionsdirectory.util.SortSetting;
 
 import java.util.List;
 
@@ -18,5 +19,7 @@ public interface RegionsService {
     Region insert(Region region);
 
     Region update(Region region);
+
+    List<Region> findAllInSortedOrder(SortSetting sortSetting);
 
 }

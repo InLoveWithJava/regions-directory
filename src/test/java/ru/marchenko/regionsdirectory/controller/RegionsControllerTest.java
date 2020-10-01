@@ -1,5 +1,6 @@
 package ru.marchenko.regionsdirectory.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +13,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.marchenko.regionsdirectory.model.Region;
 import ru.marchenko.regionsdirectory.service.RegionsService;
+import ru.marchenko.regionsdirectory.util.SortOrder;
+import ru.marchenko.regionsdirectory.util.SortSetting;
+import ru.marchenko.regionsdirectory.util.SortedField;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -52,7 +57,7 @@ class RegionsControllerTest {
         doReturn(REGIONS).when(regionsService).findAll();
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/regions/all")
+                .get("/regions/get/all")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -63,7 +68,7 @@ class RegionsControllerTest {
     void testGetAllAPIWhenStatusIsNotFound() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/regions/all")
+                .get("/regions/get/all")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -75,7 +80,7 @@ class RegionsControllerTest {
         doReturn(REGIONS.get(0)).when(regionsService).findById(1);
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/regions/1")
+                .get("/regions/get/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -86,7 +91,7 @@ class RegionsControllerTest {
     void testGetByIdAPIWhenStatusIsNotFound() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/regions/1")
+                .get("/regions/get/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -139,7 +144,7 @@ class RegionsControllerTest {
         doReturn(REGIONS.get(0)).when(regionsService).deleteById(1);
 
         mvc.perform(MockMvcRequestBuilders
-                .delete("/regions/1")
+                .delete("/regions/delete/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -149,7 +154,7 @@ class RegionsControllerTest {
     @Test
     void testDeleteByIdAPIWhenStatusIsNotFound() throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                .delete("/regions/1")
+                .delete("/regions/delete/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -178,6 +183,32 @@ class RegionsControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotModified());
+    }
+
+    @Test
+    void testGetAllInSortedOrderAPIWhenStatusIsOK() throws Exception {
+        doReturn(REGIONS).when(regionsService).findAllInSortedOrder(any());
+
+        mvc.perform( MockMvcRequestBuilders
+                .post("/regions/get/sort")
+                .content(new ObjectMapper().writeValueAsString(new SortSetting(SortedField.NAME, SortOrder.ASC)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is(REGIONS.get(0).getName())));
+    }
+
+    @Test
+    void testGetAllInSortedOrderAPIWhenStatusIsNotFound() throws Exception {
+
+        mvc.perform( MockMvcRequestBuilders
+                .post("/regions/get/sort")
+                .content(new ObjectMapper().writeValueAsString(new SortSetting(SortedField.NAME, SortOrder.ASC)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
 }

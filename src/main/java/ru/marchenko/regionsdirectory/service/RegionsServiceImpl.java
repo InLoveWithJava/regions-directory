@@ -8,9 +8,12 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.marchenko.regionsdirectory.mapper.RegionsMapper;
 import ru.marchenko.regionsdirectory.model.Region;
+import ru.marchenko.regionsdirectory.util.RegionsComparator;
+import ru.marchenko.regionsdirectory.util.SortSetting;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Created by Vladislav Marchenko on 30.09.2020
@@ -84,6 +87,16 @@ public class RegionsServiceImpl implements RegionsService {
             log.info("This region: " + region + " does not exist; it will not be updated");
             return null;
         }
+    }
+
+    @Override
+    public List<Region> findAllInSortedOrder(SortSetting sortSetting) {
+
+        return  regionsMapper
+                    .findAll()
+                    .stream()
+                    .sorted(new RegionsComparator(sortSetting))
+                    .collect(Collectors.toList());
     }
 
     private boolean isExisting(Region region){
