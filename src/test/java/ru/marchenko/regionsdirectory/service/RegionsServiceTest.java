@@ -6,8 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.marchenko.regionsdirectory.model.Region;
+
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * @author Created by Vladislav Marchenko on 30.09.2020
@@ -16,16 +21,19 @@ import ru.marchenko.regionsdirectory.model.Region;
 @SpringBootTest
 class RegionsServiceTest {
 
-    private final static String REGION_NAME = "region";
+    private static final  String REGION_NAME = "region";
 
-    private final static String REGION_ABBREVIATED_NAME = "reg";
+    private static final  String REGION_ABBREVIATED_NAME = "reg";
 
-    private final static String REGION_UPDATED_NAME = "upd region";
+    private static final  String REGION_UPDATED_NAME = "upd region";
 
-    private final Region region = new Region(REGION_NAME, REGION_ABBREVIATED_NAME);
+    private static final Region REGION = new Region(REGION_NAME, REGION_ABBREVIATED_NAME);
 
     @Autowired
     private RegionsService regionsService;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @AfterEach
     void cleanUp() {
@@ -36,45 +44,67 @@ class RegionsServiceTest {
 
     @Test
     public void testInsertMethod() {
-        regionsService.insert(region);
-        Assert.assertNotEquals((Long) 0L,  region.getId());
-        Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(region.getId()).getAbbreviatedName());
-        Assert.assertEquals(REGION_NAME, regionsService.findById(region.getId()).getName());
+        regionsService.insert(REGION);
+        Assert.assertNotEquals((Long) 0L,  REGION.getId());
+        Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(REGION.getId()).getAbbreviatedName());
+        Assert.assertEquals(REGION_NAME, regionsService.findById(REGION.getId()).getName());
+        Assert.assertNull(regionsService.insert(REGION));
     }
 
     @Test
     public void testFindMethods() {
-        regionsService.insert(region);
+        regionsService.insert(REGION);
 
-        Assert.assertNotNull(regionsService.findById(region.getId()));
+        Assert.assertNotNull(regionsService.findById(REGION.getId()));
         Assert.assertNotEquals(0, regionsService.findAll().size());
-        Assert.assertEquals(REGION_NAME, regionsService.findById(region.getId()).getName());
-        Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(region.getId()).getAbbreviatedName());
+        Assert.assertEquals(REGION_NAME, regionsService.findById(REGION.getId()).getName());
+        Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(REGION.getId()).getAbbreviatedName());
     }
 
     @Test
     public void testUpdateMethod() {
-        regionsService.insert(region);
+        regionsService.insert(REGION);
 
-        Long id = region.getId();
+        REGION.setName(REGION_UPDATED_NAME);
 
-        region.setName(REGION_UPDATED_NAME);
+        Region updRegion = regionsService.update(REGION);
 
-        Assert.assertTrue(regionsService.update(region));
-        Assert.assertEquals(id, region.getId());
-        Assert.assertEquals(REGION_ABBREVIATED_NAME, regionsService.findById(region.getId()).getAbbreviatedName());
-        Assert.assertNotEquals(REGION_NAME, regionsService.findById(region.getId()).getName());
+        Assert.assertEquals(REGION.getId(), updRegion.getId());
+        Assert.assertEquals(REGION.getAbbreviatedName(), updRegion.getAbbreviatedName());
+        Assert.assertNotEquals(REGION_NAME, updRegion.getName());
+
+        REGION.setName(REGION_NAME);
     }
 
     @Test
     public void testDeleteMethods() {
-        regionsService.insert(region);
+        regionsService.insert(REGION);
         System.out.println(regionsService.findAll());
-        Assert.assertTrue(regionsService.findAll().contains(region));
+        Assert.assertTrue(regionsService.findAll().contains(REGION));
 
-        regionsService.deleteById(region.getId());
+        regionsService.deleteById(REGION.getId());
 
-        Assert.assertFalse(regionsService.findAll().contains(region));
+        Assert.assertFalse(regionsService.findAll().contains(REGION));
+    }
+
+    @Test
+    public void testCache() {
+        Assert.assertEquals(Optional.empty(), ofNullable(cacheManager.getCache("regions")).map(c -> c.get(REGION.getId(), Region.class)));
+
+        regionsService.insert(REGION);
+        regionsService.findById(REGION.getId());
+        Assert.assertEquals(Optional.of(REGION),ofNullable(cacheManager.getCache("regions")).map(c -> c.get(REGION.getId(), Region.class)));
+
+        regionsService.deleteById(REGION.getId());
+        Assert.assertEquals(Optional.empty(), ofNullable(cacheManager.getCache("regions")).map(c -> c.get(REGION.getId(), Region.class)));
+
+        regionsService.insert(REGION);
+        regionsService.findById(REGION.getId());
+        REGION.setName("new name");
+        regionsService.update(REGION);
+        //
+
+        Assert.assertEquals(Optional.of(REGION),ofNullable(cacheManager.getCache("regions")).map(c -> c.get(REGION.getId(), Region.class)));
     }
 
 }

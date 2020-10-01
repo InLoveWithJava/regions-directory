@@ -2,6 +2,9 @@ package ru.marchenko.regionsdirectory.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.marchenko.regionsdirectory.mapper.RegionsMapper;
 import ru.marchenko.regionsdirectory.model.Region;
@@ -21,45 +24,71 @@ public class RegionsServiceImpl implements RegionsService {
 
     @Override
     public List<Region> findAll() {
-        log.info("getting all regions on" + new Date());
+        log.info("Getting all regions on" + new Date());
 
         return regionsMapper.findAll();
     }
 
     @Override
+    @Cacheable(value = "regions")
     public Region findById(long id) {
         Region region = regionsMapper.findById(id);
 
-        log.info("getting region: "+ region + " on " + new Date());
+        log.info("Getting region: "+ region + " by id: " + id + " on " + new Date());
 
         return region;
     }
 
     @Override
+    @CacheEvict(value = "regions")
     public Region deleteById(long id) {
         Region region = regionsMapper.findById(id);
 
         regionsMapper.deleteById(id);
 
-        log.info("deleting region: " + region + " on " + new Date());
+        log.info("Deleting region: " + region + " by id: " + id + " on " + new Date());
 
         return region;
     }
+
 
     @Override
     public Region insert(Region region) {
-        regionsMapper.insert(region);
+        log.info("Inserting region: " + region + " on " + new Date());
 
-        log.info("insert region: " + region + " on " + new Date());
+        if (isExist(region)) {
+            log.info("Region: " + region + " is new; it will be inserted");
+            regionsMapper.insert(region);
+            return region;
+        }
 
-        return region;
+        else {
+            log.info("This region: " + region + " is not new; it will not be inserted");
+            return null;
+        }
     }
 
     @Override
-    public boolean update(Region region) {
-        log.info("update region: " + region + " on " + new Date());
+    @CachePut(value = "regions", key = "#region.id")
+    public Region update(Region region) {
+        log.info("Updating region: " + region + " on " + new Date());
 
-        return regionsMapper.update(region) > 0;
+        if (isExist(region)) {
+            log.info("Region: " + region + " exist; it will be updated");
+
+            regionsMapper.update(region);
+
+            return region;
+        }
+
+        else {
+            log.info("This region: " + region + " does not exist; it will not be updated");
+            return null;
+        }
+    }
+
+    private boolean isExist(Region region){
+        return regionsMapper.findByNameAndAbbreviatedName(region.getName(), region.getAbbreviatedName()) == null;
     }
 
 }
