@@ -1,8 +1,7 @@
-package ru.marchenko.regionsdirectory.util;
+package ru.marchenko.regionsdirectory.util.sorting;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 

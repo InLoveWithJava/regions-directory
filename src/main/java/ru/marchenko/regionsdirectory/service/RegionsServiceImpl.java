@@ -8,8 +8,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.marchenko.regionsdirectory.mapper.RegionsMapper;
 import ru.marchenko.regionsdirectory.model.Region;
-import ru.marchenko.regionsdirectory.util.RegionsComparator;
-import ru.marchenko.regionsdirectory.util.SortSetting;
+import ru.marchenko.regionsdirectory.util.sorting.RegionsComparator;
+import ru.marchenko.regionsdirectory.util.sorting.SortSetting;
 
 import java.util.Date;
 import java.util.List;

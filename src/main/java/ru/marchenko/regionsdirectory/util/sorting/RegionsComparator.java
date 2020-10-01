@@ -1,4 +1,4 @@
-package ru.marchenko.regionsdirectory.util;
+package ru.marchenko.regionsdirectory.util.sorting;
 
 import lombok.RequiredArgsConstructor;
 import ru.marchenko.regionsdirectory.model.Region;

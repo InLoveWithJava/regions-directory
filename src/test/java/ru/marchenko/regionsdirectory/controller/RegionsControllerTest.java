@@ -1,6 +1,5 @@
 package ru.marchenko.regionsdirectory.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +12,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.marchenko.regionsdirectory.model.Region;
 import ru.marchenko.regionsdirectory.service.RegionsService;
-import ru.marchenko.regionsdirectory.util.SortOrder;
-import ru.marchenko.regionsdirectory.util.SortSetting;
-import ru.marchenko.regionsdirectory.util.SortedField;
+import ru.marchenko.regionsdirectory.util.sorting.SortOrder;
+import ru.marchenko.regionsdirectory.util.sorting.SortSetting;
+import ru.marchenko.regionsdirectory.util.sorting.SortedField;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;

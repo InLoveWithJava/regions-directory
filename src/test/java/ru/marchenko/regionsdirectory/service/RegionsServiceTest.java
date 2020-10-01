@@ -9,9 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.marchenko.regionsdirectory.model.Region;
-import ru.marchenko.regionsdirectory.util.SortOrder;
-import ru.marchenko.regionsdirectory.util.SortSetting;
-import ru.marchenko.regionsdirectory.util.SortedField;
+import ru.marchenko.regionsdirectory.util.sorting.SortOrder;
+import ru.marchenko.regionsdirectory.util.sorting.SortSetting;
+import ru.marchenko.regionsdirectory.util.sorting.SortedField;
 
 import java.util.Arrays;
 import java.util.List;

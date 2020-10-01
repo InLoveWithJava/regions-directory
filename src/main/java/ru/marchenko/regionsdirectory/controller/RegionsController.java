@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.marchenko.regionsdirectory.model.Region;
 import ru.marchenko.regionsdirectory.service.RegionsService;
-import ru.marchenko.regionsdirectory.util.SortSetting;
+import ru.marchenko.regionsdirectory.util.sorting.SortSetting;
 
 import java.util.List;
 
