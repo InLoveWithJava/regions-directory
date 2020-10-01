@@ -26,9 +26,11 @@ REST-API for regions management
 
 ## Usage
 ### How to test this API
-You should build and run this project in some IDE. The best way is to run this project in Intellij IDEA with Lombok plugin. 
+You should build and run this project in some IDE. The best way is to run this project in Intellij IDEA (you will also need Lombok plugin). 
 After running the application, you can test this API using any application that allows you to send HTTP requests. For example, you can use [Postman](https://www.postman.com/downloads/).
-(p.s. DB will be created automatically)
+```
+Note: DB will be created automatically.
+```
 ### Functionality
 -   `Get all regions`: 
     -   Type: GET
@@ -153,7 +155,7 @@ After running the application, you can test this API using any application that 
     
 ### Special features
 -   This aplication uses Spring Cache. Entities are written to the cache when fetching by ID. The cache is overwritten when the entities are updated. Entities are removed from the cache when they are removed from the database. All this provides us with faster access to the data that is used.
--   You cannot save 2 records to the database with the same names and abbreviated names (both of these fields must be equal for two records). When you try to add identical information about the region, the Forbidden status is returned and no duplicate entry appears.
+-   You cannot save 2 records to the database with the same names and abbreviated names. When you try to add identical information about the region, the Forbidden status is returned and no duplicate entry appears.
 -   When adding a new region, extra spaces are removed from its fields.
 
 ## Tests
