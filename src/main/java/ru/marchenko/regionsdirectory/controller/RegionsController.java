@@ -21,55 +21,49 @@ public class RegionsController {
 
     @GetMapping(value = "/all")
     public ResponseEntity<List<Region>> getAll() {
-
         List<Region> regions = regionsService.findAll();
 
         return regions != null &&  !regions.isEmpty()
                 ? new ResponseEntity<>(regions, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
     }
 
     @GetMapping(value = "{id}")
     public ResponseEntity<Region> getById(@PathVariable Long id) {
-
         Region region = regionsService.findById(id);
 
         return region != null
                 ? new ResponseEntity<>(region, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
     }
 
     @PostMapping(value = "/save")
     public ResponseEntity<Region> save(@RequestBody Region region) {
-
         region = regionsService.insert(region);
 
-        return region != null && (region.getId().compareTo(0L) > 0 && regionsService.findById(region.getId()) != null)
-                ? new ResponseEntity<>(region, HttpStatus.CREATED)
-                : new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
+        return region == null
+                ? new ResponseEntity<>(HttpStatus.FORBIDDEN)
+                : (region.getId().compareTo(0L) > 0 && regionsService.findById(region.getId()) != null)
+                    ? new ResponseEntity<>(region, HttpStatus.CREATED)
+                    : new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Region> deleteById(@PathVariable Long id) {
-
         Region region = regionsService.deleteById(id);
 
         return region != null
                 ? new ResponseEntity<>(region, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
     }
 
     @PutMapping(value = "/update")
-
     public ResponseEntity<Region> update(@RequestBody Region region) {
-        return regionsService.update(region)
+        Region region1 = regionsService.update(region);
+
+        return region1 != null
                 ? new ResponseEntity<>(region, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-
     }
 
 }

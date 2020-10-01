@@ -17,6 +17,9 @@ public interface RegionsMapper {
     @Select("select * from regions where id = #{id}")
     Region findById(long id);
 
+    @Select("select * from regions where name = #{name} and abbreviated_name = #{abbreviatedName}")
+    Region findByNameAndAbbreviatedName(String name, String abbreviatedName);
+
     @Delete("delete from regions where id = #{id}")
     void deleteById(long id);
 
@@ -27,6 +30,6 @@ public interface RegionsMapper {
 
     @Update("update regions set name=#{name}, " +
             " abbreviated_name=#{abbreviatedName} where id=#{id}")
-    int update(Region region);
+    void update(Region region);
 
 }

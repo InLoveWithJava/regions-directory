@@ -42,9 +42,9 @@ class RegionsControllerTest {
             new Region("region3", "reg3")
     );
 
-    private final Region REGION = new Region(1L,"region", "reg");
+    private static final Region REGION = new Region(1L,"region", "reg");
 
-    private final Region NOT_INSERTED_REGION = new Region(0L,"region", "reg");
+    private static final Region NOT_INSERTED_REGION = new Region(0L,"region", "reg");
 
     @Test
     void testGetAllAPIWhenStatusIsOK() throws Exception {
@@ -122,6 +122,19 @@ class RegionsControllerTest {
     }
 
     @Test
+    void testSaveAPIWhenStatusIsForbidden() throws Exception {
+        doReturn(null).when(regionsService).insert(any());
+
+        mvc.perform( MockMvcRequestBuilders
+                .post("/regions/save")
+                .content(new ObjectMapper().writeValueAsString(new Region("region", "reg")))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void testDeleteByIdAPIWhenStatusIsOK() throws Exception {
         doReturn(REGIONS.get(0)).when(regionsService).deleteById(1);
 
@@ -144,7 +157,7 @@ class RegionsControllerTest {
 
     @Test
     void testUpdateAPIWhenStatusIsOK() throws Exception {
-        doReturn(true).when(regionsService).update(any());
+        doReturn(REGION).when(regionsService).update(any());
 
         mvc.perform( MockMvcRequestBuilders
                 .put("/regions/update")

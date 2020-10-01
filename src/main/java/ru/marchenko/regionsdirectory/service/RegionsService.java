@@ -17,6 +17,6 @@ public interface RegionsService {
 
     Region insert(Region region);
 
-    boolean update(Region region);
+    Region update(Region region);
 
 }
