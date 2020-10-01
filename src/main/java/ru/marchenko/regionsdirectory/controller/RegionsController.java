@@ -46,7 +46,7 @@ public class RegionsController {
                 ? new ResponseEntity<>(HttpStatus.FORBIDDEN)
                 : (region.getId().compareTo(0L) > 0 && regionsService.findById(region.getId()) != null)
                     ? new ResponseEntity<>(region, HttpStatus.CREATED)
-                    : new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+                    : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping(value = "get/sort")

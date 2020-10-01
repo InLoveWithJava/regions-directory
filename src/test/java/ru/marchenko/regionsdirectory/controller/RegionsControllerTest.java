@@ -111,7 +111,7 @@ class RegionsControllerTest {
     }
 
     @Test
-    void testSaveAPIWhenStatusIsNotImplemented() throws Exception {
+    void testSaveAPIWhenStatusIsInternalServerError() throws Exception {
         doReturn(NOT_INSERTED_REGION).when(regionsService).insert(any());
         doReturn(NOT_INSERTED_REGION).when(regionsService).findById(0);
 
@@ -121,7 +121,7 @@ class RegionsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isNotImplemented());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
