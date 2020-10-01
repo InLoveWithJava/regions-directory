@@ -51,12 +51,11 @@ public class RegionsServiceImpl implements RegionsService {
         return region;
     }
 
-
     @Override
     public Region insert(Region region) {
         log.info("Inserting region: " + region + " on " + new Date());
 
-        if (isExist(region)) {
+        if (isExisting(region)) {
             log.info("Region: " + region + " is new; it will be inserted");
             regionsMapper.insert(region);
             return region;
@@ -73,7 +72,7 @@ public class RegionsServiceImpl implements RegionsService {
     public Region update(Region region) {
         log.info("Updating region: " + region + " on " + new Date());
 
-        if (isExist(region)) {
+        if (isExisting(region)) {
             log.info("Region: " + region + " exist; it will be updated");
 
             regionsMapper.update(region);
@@ -87,7 +86,9 @@ public class RegionsServiceImpl implements RegionsService {
         }
     }
 
-    private boolean isExist(Region region){
+    private boolean isExisting(Region region){
+        region.setName(region.getName().trim().replaceAll("\\s+", " "));
+        region.setAbbreviatedName(region.getAbbreviatedName().trim().replaceAll("\\s+", " "));
         return regionsMapper.findByNameAndAbbreviatedName(region.getName(), region.getAbbreviatedName()) == null;
     }
 
